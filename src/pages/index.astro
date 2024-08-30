@@ -1,0 +1,62 @@
+---
+import { icsCalendarToObject } from "ts-ics";
+import invariant from "tiny-invariant";
+
+const icsUrl = "https://calendar.google.com/calendar/ical/stephenchislett%40gmail.com/public/basic.ics";
+
+const ics = await fetch(icsUrl);
+const icsString = await ics.text();
+const calendar = icsCalendarToObject(icsString);
+const rawEvents = calendar.events;
+
+invariant(rawEvents, "No events found");
+
+const events = rawEvents.map(event => ({
+  start: event.start,
+  end: event.end,
+  description: event.description,
+  summary: event.summary,
+  lastModified: event.lastModified,
+  attachments: event.attach,
+  location: event.location,
+}));
+
+
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>nl-events</title>
+		<style>
+			@import url('https://rsms.me/inter/inter.css');
+
+			body {
+				font-family: 'Inter', sans-serif;
+				background-color: white;
+				margin: 0;
+				padding: 0;
+			}
+
+			h1 {
+				font-weight: 700;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>nl-events</h1>
+		<ul>
+			{events.map(event => (
+				<li>
+					<h2>{event.summary}</h2>
+					<p>Start: {event.start.date}</p>
+					<p>End: {event.end.date}</p>
+				</li>
+			))}
+		</ul>
+	</body>
+</html>
