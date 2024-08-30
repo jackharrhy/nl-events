@@ -1,5 +1,7 @@
 # nl-events
 
+https://jackharrhy.github.io/nl-events/
+
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
 | `bun install`             | Installs dependencies                            |
