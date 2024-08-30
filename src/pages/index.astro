@@ -1,6 +1,7 @@
 ---
 import { icsCalendarToObject } from "ts-ics";
 import invariant from "tiny-invariant";
+import { format, intervalToDuration } from 'date-fns';
 
 const icsUrl = "https://calendar.google.com/calendar/ical/stephenchislett%40gmail.com/public/basic.ics";
 
@@ -11,15 +12,30 @@ const rawEvents = calendar.events;
 
 invariant(rawEvents, "No events found");
 
-const events = rawEvents.map(event => ({
-  start: event.start,
-  end: event.end,
-  description: event.description,
-  summary: event.summary,
-  lastModified: event.lastModified,
-  attachments: event.attach,
-  location: event.location,
-}));
+const events = rawEvents.map(event => {
+	const start = new Date(event.start.date);
+	const end = event.end ? new Date(event.end.date) : null;
+	const formattedStart = format(start, 'MMMM do, yyyy h:mm a');
+	const formattedEnd = end ? format(end, 'h:mm a') : null;
+	const lengthInHours = end ? intervalToDuration({ start, end }).hours : null;
+
+	let dateString = formattedStart;
+	if (formattedEnd) {
+		dateString += ` to ${formattedEnd}`;
+	}
+	if (lengthInHours) {
+		dateString += ` (${lengthInHours} hours)`;
+	}
+
+	return {
+		date: dateString,
+		description: event.description,
+		summary: event.summary,
+		lastModified: event.lastModified,
+		attachments: event.attach,
+		location: event.location,
+	}
+});
 
 
 ---
@@ -53,8 +69,14 @@ const events = rawEvents.map(event => ({
 			{events.map(event => (
 				<li>
 					<h2>{event.summary}</h2>
-					<p>Start: {event.start.date}</p>
-					<p>End: {event.end?.date}</p>
+					<p>{event.date}</p>
+					{event.attachments && (
+						<p>
+							<a href={event.attachments} target="_blank" rel="noopener noreferrer">
+								View Attachment
+							</a>
+						</p>
+					)}
 				</li>
 			))}
 		</ul>
