@@ -54,7 +54,7 @@ const events = rawEvents.map(event => ({
 				<li>
 					<h2>{event.summary}</h2>
 					<p>Start: {event.start.date}</p>
-					<p>End: {event.end.date}</p>
+					<p>End: {event.end?.date}</p>
 				</li>
 			))}
 		</ul>
