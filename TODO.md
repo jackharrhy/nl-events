@@ -1,0 +1,8 @@
+- download images from google drive, put them into a storage bucket
+- look at an event, figure out if we might have already downloaded the image
+- pull out the dominant colors from the image ( maybe https://www.imagemagick.org/discourse-server/viewtopic.php?t=28963 ), style the card accordingly
+- geolocation api to turn location -> point on map
+- group by location
+- this week, vs. in the future, vs. in the past
+- place giving credit to the hard work of stephen to maintain this calendar
+- instructions on adding this to your own google calendar
